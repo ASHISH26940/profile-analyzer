@@ -35,7 +35,20 @@ export default function App() {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       })
-      setRepos(res.data)
+      if(!res) {
+        return
+      }
+      setRepos(
+        res.data.map((repo): Repo => ({
+          id: repo.id,
+          name: repo.name,
+          html_url: repo.html_url,
+          description: repo.description ?? '',
+          stargazers_count: repo.stargazers_count ?? 0,
+          forks_count: repo.forks_count ?? 0,
+          language: repo.language ?? null,
+        }))
+      )
     } catch (err) {
       console.error(err)
       setError('Failed to fetch repositories. Please check the username and try again.')
